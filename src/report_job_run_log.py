@@ -2,7 +2,7 @@ import os
 import argparse
 import pandas as pd
 
-from .DatabricksApi import DatabricksApi
+from .utils.DatabricksApi import DatabricksApi
 
 host_url = os.environ.get('DATABRICKS_HOST_URL')
 token = os.environ.get('DATABRICKS_TOKEN')
