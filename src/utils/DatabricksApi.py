@@ -41,6 +41,19 @@ class DatabricksApi():
             page_token = res.json()['next_page_token']
             page += 1
         return jobs
+    
+    def update_job_settings(self, job_id: str | int, settings: dict):
+        url = f'{self.host_url}/api/2.1/jobs/update'
+        data = {
+            'job_id': job_id,
+            'new_settings': settings
+        }
+        res = requests.post(url, headers=self.headers, json=data)
+
+        if res.status_code == 200:
+            return res.json()
+        else:
+            raise Exception(res.text)
 
     def list_job_runs(self, job_id: str | int, active_only: bool = False, completed_only: bool = False, limit: int = 10, start_time_from: int = None, start_time_to: int = None):
         url = f'{self.host_url}/api/2.1/jobs/runs/list?job_id={job_id}'
@@ -56,6 +69,31 @@ class DatabricksApi():
             url += f'&start_time_to={start_time_to}'
         
         res = requests.get(url, headers=self.headers)
+
+        if res.status_code == 200:
+            return res.json()
+        else:
+            raise Exception(res.text)
+
+    def list_contents(self, path: str):
+        url = f'{self.host_url}/api/2.0/workspace/list'
+        params = {
+            'path': path
+        }
+        res = requests.get(url, headers=self.headers, params=params)
+
+        if res.status_code == 200:
+            return res.json()
+        else:
+            raise Exception(res.text)
+    
+    def delete_workspace_object(self, path: str):
+        url = f'{self.host_url}/api/2.0/workspace/delete'
+        data = {
+            'path': path,
+            'recursive': True
+        }
+        res = requests.post(url, headers=self.headers, json=data)
 
         if res.status_code == 200:
             return res.json()
