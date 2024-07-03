@@ -3,8 +3,7 @@ import argparse
 import pandas as pd
 import scipy.stats as stats
 
-
-from .DatabricksApi import DatabricksApi
+from .utils.DatabricksApi import DatabricksApi
 
 host_url = os.environ.get('DATABRICKS_HOST_URL')
 token = os.environ.get('DATABRICKS_TOKEN')
@@ -47,18 +46,27 @@ if __name__ == '__main__':
 
     print()
 
+    pandas_df = pd.DataFrame(
+        columns=['Job Name', 'Job ID', 'Num Job Runs', 'Avg (sec)', 'Max (sec)', 'Min (sec)'], 
+        data={
+            'Job Name': [job1_name, job2_name],
+            'Job ID': [args.job_id_1, args.job_id_2],
+            'Num Job Runs': [len(job1_run_list), len(job2_run_list)],
+            'Avg (sec)': [stats1[0], stats2[0]],
+            'Max (sec)': [stats1[1], stats2[1]],
+            'Min (sec)': [stats1[2], stats2[2]]
+        })
+
     print("===== REPORT =====")
-    max_name_len = max(len(job1_name), len(job2_name))
-    max_id_len = max(len(args.job_id_1), len(args.job_id_2))
-    print(f'"{job1_name.ljust(max_name_len)}" ({args.job_id_1.ljust(max_id_len)}): (Avg, Max, Min) = {stats1} Seconds')
-    print(f'"{job2_name.ljust(max_name_len)}" ({args.job_id_2.ljust(max_id_len)}): (Avg, Max, Min) = {stats2} Seconds')
+    print(pandas_df.to_markdown(tablefmt="simple_outline", index=False, colalign=('left', 'right')))
 
     if args.run_statistical_test:
         t_stat, p_value = stats.ttest_ind(job1_run_list, job2_run_list)
         alpha = 0.05
-        print(f"p-value={p_value}")
+        print(f"p-value={p_value:.3f}")
         if p_value < alpha:
-            print("There is a significant time difference between the two jobs.")
+            print("*There is a **SIGNIFICANT TIME DIFFERENCE** between the two jobs.")
         else:
-            print("There is no significant time difference between the two jobs.")
+            print("*There is no significant time difference between the two jobs.")
+    
     print("==================")
