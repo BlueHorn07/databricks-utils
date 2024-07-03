@@ -38,7 +38,7 @@ if __name__ == '__main__':
     job1_name = job1['settings']['name']
     job1_run_list = get_job_run_stats(args.job_id_1, args.num_job_runs)
     stats1 = get_basic_stats(job1_run_list)
-    
+
     job2 = api.get_single_job(args.job_id_2)
     job2_name = job2['settings']['name']
     job2_run_list = get_job_run_stats(args.job_id_2, args.num_job_runs)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     print()
 
     pandas_df = pd.DataFrame(
-        columns=['Job Name', 'Job ID', 'Num Job Runs', 'Avg (sec)', 'Max (sec)', 'Min (sec)'], 
+        columns=['Job Name', 'Job ID', 'Num Job Runs', 'Avg (sec)', 'Max (sec)', 'Min (sec)'],
         data={
             'Job Name': [job1_name, job2_name],
             'Job ID': [args.job_id_1, args.job_id_2],
@@ -68,5 +68,5 @@ if __name__ == '__main__':
             print("*There is a **SIGNIFICANT TIME DIFFERENCE** between the two jobs.")
         else:
             print("*There is no significant time difference between the two jobs.")
-    
+
     print("==================")

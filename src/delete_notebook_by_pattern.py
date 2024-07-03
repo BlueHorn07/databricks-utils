@@ -28,5 +28,5 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, required=True)
     parser.add_argument('--pattern', type=str, required=True)
     args = parser.parse_args()
-    
+
     delete_notebook_by_pattern(args.path, args.pattern)

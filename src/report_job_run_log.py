@@ -14,7 +14,7 @@ def get_job_run_report(job_id: str | int, num_job_runs: int = 10):
     job_runs = api.list_job_runs(job_id=job_id, completed_only=True, limit=num_job_runs)
 
     df = pd.DataFrame(job_runs['runs'])
-    
+
     avg_duration = df['run_duration'].mean()
     max_duration = df['run_duration'].max()
     min_duration = df['run_duration'].min()
@@ -26,5 +26,5 @@ if __name__ == '__main__':
     parser.add_argument('--job-id', type=str, required=True)
     parser.add_argument('--num-job-runs', type=str, required=False, default=10)
     args = parser.parse_args()
-    
+
     get_job_run_report(args.job_id, args.num_job_runs)
